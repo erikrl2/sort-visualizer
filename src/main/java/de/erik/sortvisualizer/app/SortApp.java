@@ -14,11 +14,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class SortApp extends Application {
 
-	private final int AMT = 400;
-	private final double FREQUENZY = 0.05;
+	private final double INTERVAL = 0.1;
+	private int amount;
 
 	private Pane root;
 	private List<Rectangle> rects;
@@ -27,41 +28,51 @@ public class SortApp extends Application {
 		root = new Pane();
 		root.setPrefSize(800, 400);
 		rects = new ArrayList<>();
-		if (AMT <= 400) {
-			createRects();
-			sortRects();
-		}
+		sortRects();
 		return root;
 	}
 
+	private final int amts[] = { 8, 10, 20, 25, 40, 50, 100 };
+
 	private void sortRects() {
+		amount = amts[(int) (Math.random() * amts.length)];
+		System.out.println(amount);
+		createRects();
 		drawRects();
-		var animationTimer = new AnimationTimer() {
+		new AnimationTimer() {
 			double t = 0;
+			boolean done;
 
 			public void handle(long now) {
 				t += 0.016;
-				if (t >= FREQUENZY) {
-					int count = 0;
-					for (int i = 0; i < AMT - 1; i++) {
-						if (rects.get(i).getHeight() < rects.get(i + 1).getHeight()) {
+				if (t >= INTERVAL) {
+					done = true;
+					for (int i = 0; i < amount - 1; i++) {
+						for (int j = 0; j < i; j++) {
+							rects.get(j).setFill(Color.STEELBLUE);
+						}
+						rects.get(i).setFill(Color.WHITE);
+						if (rects.get(i).getHeight() > rects.get(i + 1).getHeight()) {
+							rects.get(i + 1).setFill(Color.STEELBLUE);
 							double tmpHeight = rects.get(i).getHeight();
 							rects.get(i).setHeight(rects.get(i + 1).getHeight());
 							rects.get(i + 1).setHeight(tmpHeight);
+							double tmpTrans = rects.get(i).getTranslateY();
+							rects.get(i).setTranslateY(rects.get(i + 1).getTranslateY());
+							rects.get(i + 1).setTranslateY(tmpTrans);
 							drawRects();
-							count++;
+							done = false;
+							break;
 						}
 					}
-					if (count == 0) {
+					if (done) {
 						stop();
-						System.out.println("sort finished");
-						Platform.exit();
+						sortRects();
 					}
 					t = 0;
 				}
 			}
-		};
-		animationTimer.start();
+		}.start();
 	}
 
 	private void drawRects() {
@@ -69,27 +80,33 @@ public class SortApp extends Application {
 	}
 
 	private void createRects() {
-		Stack<Double> hStack = new Stack<>();
+		Stack<Integer> hStack = new Stack<>();
 		fillStack(hStack);
-		for (int i = 0; i < AMT; i++) {
-			double width = 800 / AMT;
+		rects.clear();
+		for (int i = 0; i < amount; i++) {
+			double width = 800 / amount;
 			double height = hStack.pop();
 			var rect = new Rectangle(width, height, Color.STEELBLUE);
 			rect.setTranslateX(width * i);
+			rect.setTranslateY(400 - height);
 			rects.add(rect);
 		}
 	}
 
-	private void fillStack(Stack<Double> hStack) {
-		for (double i = 1; i <= 400; i += 400 / AMT) {
-			hStack.push(i);
+	private void fillStack(Stack<Integer> hStack) {
+		for (int height = 1; height <= 400; height += 400 / amount) {
+			hStack.push(height);
 		}
 		Collections.shuffle(hStack);
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		stage.setScene(new Scene(createContent(), Color.BLACK));
+		var scene = new Scene(createContent(), Color.TRANSPARENT);
+		scene.setOnKeyPressed(e -> Platform.exit());
+		stage.setScene(scene);
+		stage.initStyle(StageStyle.TRANSPARENT);
+		stage.setAlwaysOnTop(true);
 		stage.setResizable(false);
 		stage.show();
 	}
