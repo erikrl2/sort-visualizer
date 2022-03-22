@@ -36,7 +36,6 @@ public class SortApp extends Application {
 
 	private void sortRects() {
 		amount = amts[(int) (Math.random() * amts.length)];
-		System.out.println(amount);
 		createRects();
 		drawRects();
 		new AnimationTimer() {
@@ -51,7 +50,7 @@ public class SortApp extends Application {
 						for (int j = 0; j < i; j++) {
 							rects.get(j).setFill(Color.STEELBLUE);
 						}
-						rects.get(i).setFill(Color.WHITE);
+						rects.get(i).setFill(Color.RED);
 						if (rects.get(i).getHeight() > rects.get(i + 1).getHeight()) {
 							rects.get(i + 1).setFill(Color.STEELBLUE);
 							double tmpHeight = rects.get(i).getHeight();
