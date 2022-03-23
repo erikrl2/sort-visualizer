@@ -18,7 +18,7 @@ import javafx.stage.StageStyle;
 
 public class SortApp extends Application {
 
-	private final double INTERVAL = 0.1;
+	private final double INTERVAL = 0.032;
 	private int amount;
 
 	private Pane root;
@@ -47,10 +47,9 @@ public class SortApp extends Application {
 				if (t >= INTERVAL) {
 					done = true;
 					for (int i = 0; i < amount - 1; i++) {
-						for (int j = 0; j < i; j++) {
+						for (int j = 0; j < i; j++)
 							rects.get(j).setFill(Color.STEELBLUE);
-						}
-						rects.get(i).setFill(Color.RED);
+						rects.get(i).setFill(Color.BLUE);
 						if (rects.get(i).getHeight() > rects.get(i + 1).getHeight()) {
 							rects.get(i + 1).setFill(Color.STEELBLUE);
 							double tmpHeight = rects.get(i).getHeight();
