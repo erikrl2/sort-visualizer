@@ -20,13 +20,15 @@ public class SortApp extends Application {
 
 	private final double INTERVAL = 0.1; // 0.032
 	private int amount;
+	final double W = 800;
+	final double H = 400;
 
 	private Pane root;
 	private List<Rectangle> rects;
 
 	private Parent createContent() {
 		root = new Pane();
-		root.setPrefSize(800, 400);
+		root.setPrefSize(W, H);
 		rects = new ArrayList<>();
 		sortRects();
 		return root;
@@ -54,7 +56,9 @@ public class SortApp extends Application {
 							double tmpTrans = rects.get(i).getTranslateY();
 							rects.get(i).setTranslateY(rects.get(i + 1).getTranslateY());
 							rects.get(i + 1).setTranslateY(tmpTrans);
-							rects.get(i).setFill(Color.grayRgb((int) (Math.random() * 128)));
+							var tmpFill = rects.get(i).getFill();
+							rects.get(i).setFill(rects.get(i + 1).getFill());
+							rects.get(i + 1).setFill(tmpFill);
 							drawRects();
 							done = false;
 							i++;
@@ -83,20 +87,22 @@ public class SortApp extends Application {
 		Stack<Integer> hStack = new Stack<>();
 		fillStack(hStack);
 		rects.clear();
+		int grgb = 0;
+		final int inc = 255 / amount;
 		for (int i = 0; i < amount; i++) {
-			double width = 800 / amount;
+			double width = W / amount;
 			double height = hStack.pop();
-			var rect = new Rectangle(width, height);
+			var rect = new Rectangle(width, height, Color.grayRgb(grgb));
 			rect.setTranslateX(width * i);
-			rect.setTranslateY(400 - height);
+			rect.setTranslateY(H - height);
 			rects.add(rect);
+			grgb += inc;
 		}
 	}
 
 	private void fillStack(Stack<Integer> hStack) {
-		for (int height = 1; height <= 400; height += 400 / amount) {
+		for (int height = 1; height <= H; height += H / amount)
 			hStack.push(height);
-		}
 		Collections.shuffle(hStack);
 	}
 
