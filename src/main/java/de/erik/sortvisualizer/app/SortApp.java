@@ -1,7 +1,6 @@
 package de.erik.sortvisualizer.app;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -78,8 +77,6 @@ public class SortApp extends Application {
 		Stack<Integer> hStack = new Stack<>();
 		for (int height = 1; height <= H; height += H / amount)
 			hStack.push(height);
-		if (toggle)
-			Collections.reverse(hStack);
 		rects.clear();
 		int grgb = 0;
 		final int inc = 224 / amount;
