@@ -37,7 +37,7 @@ public class SortApp extends Application {
 	private void sortRects() {
 		amount = amts[(int) (Math.random() * amts.length)];
 		createRects();
-		drawRects();
+		root.getChildren().setAll(rects);
 		new AnimationTimer() {
 			double t = 0;
 			boolean done;
@@ -48,14 +48,17 @@ public class SortApp extends Application {
 					done = true;
 					for (int i = 0; i < amount - 1; i++) {
 						if (rects.get(i).getHeight() > rects.get(i + 1).getHeight()) {
-							double tmpHeight = rects.get(i).getHeight();
-							rects.get(i).setHeight(rects.get(i + 1).getHeight());
-							rects.get(i + 1).setHeight(tmpHeight);
-							double tmpTrans = rects.get(i).getTranslateY();
-							rects.get(i).setTranslateY(rects.get(i + 1).getTranslateY());
-							rects.get(i + 1).setTranslateY(tmpTrans);
-							rects.get(i).setFill(Color.grayRgb((int) (Math.random() * 128)));
-							drawRects();
+							var cur = rects.get(i);
+							var nxt = rects.get(i +1);
+							double tmpHeight = cur.getHeight();
+							cur.setHeight(nxt.getHeight());
+							nxt.setHeight(tmpHeight);
+							double tmpTrans = cur.getTranslateY();
+							cur.setTranslateY(nxt.getTranslateY());
+							nxt.setTranslateY(tmpTrans);
+							var tmpFill = cur.getFill();
+							cur.setFill(nxt.getFill());
+							nxt.setFill(tmpFill);
 							done = false;
 							i++;
 						}
@@ -75,29 +78,23 @@ public class SortApp extends Application {
 		}.start();
 	}
 
-	private void drawRects() {
-		root.getChildren().setAll(rects);
-	}
-
 	private void createRects() {
 		Stack<Integer> hStack = new Stack<>();
-		fillStack(hStack);
+		for (int height = 1; height <= 400; height += 400 / amount)
+			hStack.push(height);
+		Collections.shuffle(hStack);
 		rects.clear();
+		int grgb = 0;
+		final int inc = 224 / amount;
 		for (int i = 0; i < amount; i++) {
 			double width = 800 / amount;
 			double height = hStack.pop();
-			var rect = new Rectangle(width, height);
+			var rect = new Rectangle(width, height, Color.grayRgb(grgb));
 			rect.setTranslateX(width * i);
 			rect.setTranslateY(400 - height);
 			rects.add(rect);
+			grgb += inc;
 		}
-	}
-
-	private void fillStack(Stack<Integer> hStack) {
-		for (int height = 1; height <= 400; height += 400 / amount) {
-			hStack.push(height);
-		}
-		Collections.shuffle(hStack);
 	}
 
 	@Override
