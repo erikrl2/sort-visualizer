@@ -18,7 +18,7 @@ import javafx.stage.StageStyle;
 
 public class SortApp extends Application {
 
-	private final double INTERVAL = 0.032;
+	private final double INTERVAL = 0.1; // 0.032
 	private int amount;
 
 	private Pane root;
@@ -47,24 +47,26 @@ public class SortApp extends Application {
 				if (t >= INTERVAL) {
 					done = true;
 					for (int i = 0; i < amount - 1; i++) {
-						for (int j = 0; j < i; j++)
-							rects.get(j).setFill(Color.STEELBLUE);
-						rects.get(i).setFill(Color.BLUE);
 						if (rects.get(i).getHeight() > rects.get(i + 1).getHeight()) {
-							rects.get(i + 1).setFill(Color.STEELBLUE);
 							double tmpHeight = rects.get(i).getHeight();
 							rects.get(i).setHeight(rects.get(i + 1).getHeight());
 							rects.get(i + 1).setHeight(tmpHeight);
 							double tmpTrans = rects.get(i).getTranslateY();
 							rects.get(i).setTranslateY(rects.get(i + 1).getTranslateY());
 							rects.get(i + 1).setTranslateY(tmpTrans);
+							rects.get(i).setFill(Color.grayRgb((int) (Math.random() * 128)));
 							drawRects();
 							done = false;
-							break;
+							i++;
 						}
 					}
 					if (done) {
 						stop();
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						sortRects();
 					}
 					t = 0;
@@ -84,7 +86,7 @@ public class SortApp extends Application {
 		for (int i = 0; i < amount; i++) {
 			double width = 800 / amount;
 			double height = hStack.pop();
-			var rect = new Rectangle(width, height, Color.STEELBLUE);
+			var rect = new Rectangle(width, height);
 			rect.setTranslateX(width * i);
 			rect.setTranslateY(400 - height);
 			rects.add(rect);
