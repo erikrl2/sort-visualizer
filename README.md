@@ -1,2 +1,2 @@
 
-![sortvisualizerimg](https://user-images.githubusercontent.com/92889691/161241175-56c98e53-ed08-4151-97f3-f9103d9e06ed.png)
+![featuresort](https://user-images.githubusercontent.com/92889691/161318798-10d331b6-def3-41e6-8ac4-627cb02d6877.png)
